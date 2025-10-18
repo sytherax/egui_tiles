@@ -186,7 +186,7 @@ impl Tabs {
         self.active = self.next_active(tiles);
     }
 
-    pub(super) fn ui<Pane>(
+    pub(crate) fn ui<Pane>(
         &mut self,
         tree: &mut Tree<Pane>,
         behavior: &mut dyn Behavior<Pane>,
@@ -266,6 +266,7 @@ impl Tabs {
 
                     let output = scroll_area.show(ui, |ui| {
                         if !tree.is_root(tile_id)
+                            && !tree.floating
                             && behavior.is_tile_draggable(&tree.tiles, tile_id)
                         {
                             // Make the background behind the buttons draggable (to drag the parent container tile).

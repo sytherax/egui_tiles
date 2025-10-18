@@ -1,6 +1,6 @@
 use egui::{
     Color32, Id, Rect, Response, Rgba, Sense, Stroke, TextStyle, Ui, Vec2, Visuals, WidgetText,
-    vec2,
+    emath::GuiRounding, vec2,
 };
 
 use super::{ResizeState, SimplificationOptions, Tile, TileId, Tiles, UiResponse};
@@ -447,6 +447,22 @@ pub trait Behavior<Pane> {
     /// Default: `true` (all containers are resizable).
     fn is_container_resizable(&self, _tiles: &Tiles<Pane>, _tile_id: TileId) -> bool {
         true
+    }
+
+    /// Allow creating tab layouts by dropping tiles into the tab area of other tiles.
+    ///
+    /// If `false`, dragging a tile over the tab area of another tile will not create a new tab layout.
+    /// The tile will only be inserted as a horizontal or vertical split.
+    fn allow_creating_tabs_on_drop(&self) -> bool {
+        true
+    }
+
+    /// Does the behavior allow for resizing the window diagonally?
+    fn allow_diagonal_resize(&self) -> bool {
+        true
+    }
+/// Paint a hint at the corners when hovering them to drag a floating window diagonally.
+    fn paint_corner_hint(&self, _ui: &egui::Ui, _response: &egui::Response, _corner_rect: egui::Rect) {
     }
 
     // Callbacks:

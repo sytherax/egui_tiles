@@ -984,10 +984,13 @@ impl<Pane> Tree<Pane> {
 
                 let mut rect = area_ui.available_rect_before_wrap();
 
-                // Apply inner margin equal to gap width when borders are enabled
                 if behavior.floating_pane_border_enabled() {
-                    let gap = behavior.gap_width(area_ui.style());
-                    rect = rect.shrink(gap);
+                    let border_width = behavior
+                        .floating_pane_border_stroke(area_ui.visuals())
+                        .width;
+                    if border_width > 0.0 {
+                        rect = rect.shrink(border_width * 0.5);
+                    }
                 }
 
                 self.tiles
@@ -1273,7 +1276,7 @@ impl<Pane> Tree<Pane> {
             match &mut tile {
                 Tile::Pane(pane) => {
                     if behavior.pane_ui(ui, tile_id, pane) == UiResponse::DragStarted
-                        && behavior.is_tile_draggable(&self.tiles, tile_id) 
+                        && behavior.is_tile_draggable(&self.tiles, tile_id)
                     {
                         let allow_drag = if self.floating {
                             self.tiles.parent_of(tile_id).map_or(false, |parent_id| {
@@ -1392,11 +1395,8 @@ impl<Pane> Tree<Pane> {
                         .max_rect(preview_rect)
                         .sizing_pass()
                         .invisible();
-                    let _ignored: UiResponse = behavior.pane_ui(
-                        &mut ui.new_child(ui_builder),
-                        dragged_tile_id,
-                        pane,
-                    );
+                    let _ignored: UiResponse =
+                        behavior.pane_ui(&mut ui.new_child(ui_builder), dragged_tile_id, pane);
                 }
             }
         }

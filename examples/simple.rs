@@ -227,11 +227,11 @@ impl egui_tiles::Behavior<Pane> for TreeBehavior {
     }
 
     fn floating_pane_border_stroke(&self, _visuals: &egui::Visuals) -> egui::Stroke {
-        Stroke::new(5.0, egui::Color32::RED)
+        Stroke::new(2.0, egui::Color32::RED)
     }
 
     fn floating_pane_border_rounding(&self, _visuals: &egui::Visuals) -> f32 {
-        0.0 // Remove rounding for now to make it more obvious
+        2.0
     }
 }
 
@@ -291,7 +291,7 @@ impl eframe::App for SimpleApp {
             .unwrap_or(fps_instant);
 
         if self.show_sidebar {
-            egui::SidePanel::left("tree_sidebar_simple").show_inside(ui, |ui| {
+            egui::Panel::left("tree_sidebar_simple").show_inside(ui, |ui| {
                 if ui.button("Reset").clicked() {
                     *self = SimpleApp::new();
                 }
@@ -335,7 +335,7 @@ impl eframe::App for SimpleApp {
                 }
             });
         } else {
-            egui::TopBottomPanel::top("top_controls_simple").show_inside(ui, |ui| {
+            egui::Panel::top("top_controls_simple").show_inside(ui, |ui| {
                 ui.horizontal(|ui| {
                     if ui.button("Show Sidebar").clicked() {
                         self.show_sidebar = true;
